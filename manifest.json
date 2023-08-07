@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "Travel Warnings",
+  "version": "1.0",
+  "description": "Warns you about bad places to travel",
+  "content_scripts": [
+    {
+      "js": ["content.js"],
+      "matches": ["https://*.booking.com/*"]
+    }
+  ]
+}

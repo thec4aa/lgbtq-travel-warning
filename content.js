@@ -1,0 +1,337 @@
+//
+//
+//
+
+const bannedWords = ["Uzbekistan", "Uganda", "Russia", "Florida"];
+
+const bannerId = "travel-warning-banner";
+let bannerInjected = false;
+
+const createBanner = () => {
+  if (bannerInjected) {
+    console.log("travel-error: banner already injected");
+    return;
+  }
+
+  // create hideModal() function in-page
+  // FIXME this doesn't work on booking.com due to their content security policy
+  const script = document.createElement("script");
+  script.textContent = `
+    function hideModal() {
+      var modal = document.getElementById('myModal');
+      modal.style.display = 'none';
+    }
+  `;
+  document.body.appendChild(script);
+
+  // inject our banner HTML by brute force
+  console.log("creating banner...");
+  document.body.innerHTML = bannerHTML + document.body.innerHTML;
+  const modal = document.getElementById("myModal");
+  modal.style.opacity = "1"; // activate fade in animation
+
+  // const banner = document.createElement("div");
+  // banner.id = bannerId;
+  // banner.style.position = "fixed";
+  // banner.style.width = "100%";
+  // banner.style.height = "50px";
+  // banner.style.backgroundColor = "red";
+  // banner.style.color = "white";
+  // banner.style.zIndex = "9999";
+  // banner.style.textAlign = "center";
+  // banner.style.paddingTop = "10px";
+  // banner.style.fontSize = "20px";
+  // banner.style.fontWeight = "bold";
+  // banner.innerHTML = "WARNING: This is a warning banner.";
+  // document.body.prepend(banner);
+
+  bannerInjected = true;
+};
+
+const removeBanner = () => {
+  const banner = document.getElementById(bannerId);
+  if (banner) {
+    banner.remove();
+    bannerInjected = false;
+  }
+};
+
+// const monitorInput = (input) => {
+//   input.addEventListener("change", function () {
+//     console.log("travel-warning: input value changed to: " + this.value);
+//     if (checkTextForWords(this.value)) createBanner();
+//   });
+// };
+
+const checkTextForWords = (searchText) => {
+  const regex = new RegExp(bannedWords.join("|"), "i");
+  return regex.test(searchText);
+};
+
+function checkBodyForWords() {
+  const bodyText = document.body.innerText;
+  return checkTextForWords(bodyText);
+}
+
+function checkInputsForWords() {
+  const inputs = document.querySelectorAll("input, textarea, select");
+  for (let i = 0; i < inputs.length; i++) {
+    if (checkTextForWords(inputs[i].value)) {
+      console.log("checkInputsForWords: Found banned words in input =>", {
+        input: inputs[i],
+        value: inputs[i].value,
+      });
+      return true;
+    }
+  }
+  return false;
+}
+
+function handleFormChange(type, other) {
+  console.log("handleFormChange", type, other);
+  if (checkInputsForWords()) createBanner();
+  else console.log("handleFormChange: no banned words found");
+}
+
+const monitorInputs = () => {
+  const formElements = document.querySelectorAll("input, select, textarea");
+  console.log("monitoring form inputs", formElements);
+  formElements.forEach(function (element) {
+    element.addEventListener("input", handleFormChange);
+    element.addEventListener("change", handleFormChange);
+    element.addEventListener("blur", handleFormChange);
+  });
+};
+
+const monitorBody = () => {
+  const observer = new MutationObserver(function (mutations) {
+    mutations.forEach(function (mutation) {
+      if (mutation.type === "childList") {
+        mutation.addedNodes.forEach(function (node) {
+          if (node.nodeType === Node.ELEMENT_NODE) {
+            if (!node.innerText) return;
+            const found = checkTextForWords(node.innerText);
+            if (found) {
+              createBanner();
+            } else {
+              console.log(
+                "Did not find banned words in the updated HTML.",
+                node.innerText
+              );
+            }
+          }
+        });
+      }
+    });
+  });
+  // Start observing the document with the configured parameters
+  observer.observe(document, { childList: true, subtree: true });
+};
+
+console.log("travel-warning: content.js", window.location.hostname);
+monitorInputs();
+// monitorBody();
+
+// test mode
+// setTimeout(() => {
+//   createBanner();
+// }, 1000);
+
+// if (window.location.hostname === "www.google.com") {
+//   console.log("travel-warning: Google Flights");
+//   const selector = "div[aria-placeholder='Where to?'] input";
+//   const input = document.querySelector(selector);
+//   // TODO annoyingly need to monitor for a hidden div that is appended after the input
+//   // monitorInput(input);
+// } else if (window.location.hostname.match(/booking\.com/)) {
+//   console.log("travel-warning: Booking.com");
+//   const selector = "input[name='ss']";
+//   const input = document.querySelector(selector);
+//   // monitorInput(input);
+//   const check = checkBodyForWords();
+//   console.log({ check });
+// } else {
+//   console.log("travel-warning: unsupported site", window.location);
+// }
+
+const bannerHTML = `
+
+<style>
+@keyframes shake {
+  0% { transform: translateX(0); }
+  10% { transform: translateX(-10px); }
+  20% { transform: translateX(10px); }
+  30% { transform: translateX(-10px); }
+  40% { transform: translateX(10px); }
+  50% { transform: translateX(-10px); }
+  60% { transform: translateX(10px); }
+  70% { transform: translateX(-10px); }
+  80% { transform: translateX(10px); }
+  90% { transform: translateX(-10px); }
+  100% { transform: translateX(0); }
+}
+
+body {
+  background-color: #fff;
+  width: 1280px;
+  margin: auto;
+  font-size: 1em;
+}
+
+#lipsum {
+ font-size: 3em;
+}
+
+/* The Modal (background) */
+.modal {
+  opacity: 0;
+  animation: shake 1s;
+
+  position: fixed; /* Stay in place */
+  z-index: 100; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  backdrop-filter: blur(3px);
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #0a314d;
+  color: white;
+  font-size: 22px;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 30px;
+  border: 2px solid #ccc;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+.modal-content-text {
+  margin-left: 10%;
+  border-left: 1px solid #fff;
+  padding-left: 5%;
+  font-family: "Open Sans", Arial, Sans-Serif;
+  font-size: 16px;
+  line-height: 28px;
+  letter-spacing: .05em;
+}
+
+.modal-content h1{
+  font-family: "EB Garamond", Times, Serif;
+  font-weight: 400;
+  padding: 0px;
+  margin-top:.25em;
+  font-size: 2.5em;
+  line-height: 1em;
+}
+
+.modal-content h2{
+  font-size: 14px;
+  margin-bottom: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.modal-content .stars{
+  margin: 0;
+}
+
+.modal-content-text a
+{
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+  background: linear-gradient(90deg, red, orange, yellow, green, blue, purple);
+  background-clip: text;
+  -webkit-background-clip: text;
+  letter-spacing: .1em;
+}
+
+.modal-content-text a:hover
+  {
+  color: transparent;
+  transition: 500ms ease;
+}
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.red {
+  color: red;
+}
+
+.orange {
+  color: orange;
+}
+
+.yellow {
+  color: yellow;
+}
+
+.green {
+  color: green;
+}
+
+.blue {
+  color: blue;
+}
+
+.indigo {
+  color: purple;
+}
+
+.violet {
+  color: pink;
+}
+
+.babyblue {
+  color: #A1C9F2;
+}
+</style>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=EB+Garamond">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
+
+<div id="myModal" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close" onclick="hideModal()">&times;</span>
+    <div class="modal-content-text">
+    <p class="stars"><span class="red">★</span> <span class="orange">★</span> <span class="yellow">★</span> <span class="green">★</span> <span class="blue">★</span> <span class="indigo">★</span> <span class="violet">★</span> <span class="babyblue">★</span></p>
+    <h1>LGBTQ Travel Alert! ⚠️</h1>
+    <h2>This region is not safe for travel</h2>
+
+<p>Loving someone should not a crime. This region has discriminatory laws which put travelers at risk. Do not travel here.
+
+<p><strong>This region's laws allow for one or more of the following:</strong></p>
+
+<ul>
+<li>Criminalization of homosexuality</li>
+<li>Torture of suspected LGBTQ people</li>
+<li>Criminalization of education about sexuality</li>
+<li>Criminalization of HIV status and/or testing</li>
+</ul>
+
+      <p>Learn more at: <a href=https://BringLoveToUzbekistan.org>BringLoveToUzbekistan.org</a>
+    </div>
+  </div>
+
+</div>
+ `;
