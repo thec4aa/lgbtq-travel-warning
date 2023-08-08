@@ -11,8 +11,8 @@
         "https://*.kayak.com/*",
         "https://*.kayak.fr/*",
         "https://www.google.com/travel/*",
-        "https://www.airbnb.com/*",
-        "https://www.vrbo.com/"
+        "https://*.airbnb.com/*",
+        "https://*.vrbo.com/"
       ]
     }
   ]

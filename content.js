@@ -4,7 +4,8 @@
 
 const bannedWords = ["Uzbekistan", "Uganda", "Russia", "Florida"];
 
-const bannerId = "travel-warning-banner";
+const bannerId = "travel-alert-modal";
+const closeButtonId = "travel-alert-modal-close";
 let bannerInjected = false;
 
 const createBanner = () => {
@@ -13,29 +14,28 @@ const createBanner = () => {
     return;
   }
 
-  // create hideModal() function in-page
-  // FIXME this doesn't work on booking.com due to their content security policy
-  // const script = document.createElement("script");
-  // script.textContent = `
-  //   function hideModal() {
-  //     var modal = document.getElementById('travel-alert-modal');
-  //     modal.style.display = 'none';
-  //   }
-  // `;
-  // document.body.appendChild(script);
-
-  // inject our banner HTML by brute force
   console.log("creating banner...");
   bannerInjected = true;
-  document.body.innerHTML = bannerHTML + document.body.innerHTML;
-  const modal = document.getElementById("travel-alert-modal");
-  modal.style.opacity = "1"; // activate fade in animation
+
+  // slap in the HTML and force the browser to just figure it out
+  // works but seems to introduce issues after we close our modal
+  // document.body.innerHTML = bannerHTML + document.body.innerHTML;
+
+  // try to inject a little more gently, using a cloned element
+  const template = document.createElement("template");
+  template.innerHTML = bannerHTML;
+  const newElement = template.content.cloneNode(true);
+  // document.body.prepend(banner);
+  document.body.appendChild(newElement);
+
+  // activate animation by turning up opacity
+  const modal = document.getElementById(bannerId);
+  modal.style.opacity = "1";
 
   // make our close button work, even with restricted content-security policies
-  const el = document.getElementById("travel-alert-close-button");
-
+  const el = document.getElementById(closeButtonId);
   el.addEventListener("click", function () {
-    modal.remove();
+    removeBanner();
   });
 
   // const banner = document.createElement("div");
@@ -56,6 +56,7 @@ const createBanner = () => {
 
 const removeBanner = () => {
   const banner = document.getElementById(bannerId);
+  console.log("REMOVING BANNER", banner);
   if (banner) {
     banner.remove();
     bannerInjected = false;
@@ -93,13 +94,18 @@ function checkInputsForWords() {
   return false;
 }
 
-function handleFormChange(name, ev) {
+function handleFormChangeWithName(name, ev) {
+  console.log("travel-warning: handleFormChangeWithName", name);
+  handleFormChange(ev);
+}
+
+function handleFormChange(ev) {
   // brute force check every input
   // if (checkInputsForWords()) createBanner();
   // else console.log("handleFormChange: no banned words found");
 
   // just check what changed
-  console.log("travel-warning: handleFormChange", name, ev);
+  console.log("travel-warning: handleFormChange", ev);
   if (ev.target) {
     // console.log({
     //   value: ev?.target?.value,
@@ -134,11 +140,20 @@ function handleFormChange(name, ev) {
 
 const monitorInputs = () => {
   const formElements = document.querySelectorAll("input, select, textarea");
-  console.log("monitoring form inputs", formElements);
+  console.log("travel-warning: monitoring form inputs...", formElements);
   formElements.forEach(function (element) {
-    element.addEventListener("input", (ev) => handleFormChange("input", ev));
-    // element.addEventListener("change", (ev) => handleFormChange("change", ev));
-    // element.addEventListener("blur", (ev) => handleFormChange("blur", ev));
+    // avoid issues w/ accidentally double-binding same elements by first removing it
+    // element.removeEventListener("input", handleFormChange);
+    const attr = "data-travel-warning-bound";
+    if (!element.hasAttribute(attr)) {
+      element.addEventListener("input", handleFormChange);
+      element.setAttribute(attr, "true");
+    } else {
+      console.log("travel-warning: not rebinding", element);
+    }
+    // element.addEventListener("input", (ev) => handleFormChangeWithName("input", ev));
+    // element.addEventListener("change", (ev) => handleFormChangeWithName("change", ev));
+    // element.addEventListener("blur", (ev) => handleFormChangeWithName("blur", ev));
   });
 };
 
@@ -167,17 +182,21 @@ const monitorBody = () => {
   observer.observe(document, { childList: true, subtree: true });
 };
 
-console.log("travel-warning: content.js", window.location.hostname);
-monitorInputs();
-// monitorBody();
+console.log("travel-warning: content.js loaded", window.location.hostname);
 
-// test mode
+// wait til page has sufficiently loaded to setup our event listeners
+window.addEventListener("load", function () {
+  console.log("travel-warning: load event fired, monitoring inputs...");
+  monitorInputs();
+  // monitorBody();
+});
+
+// test the banner
 // setTimeout(() => {
 //   createBanner();
 // }, 1000);
 
 const bannerHTML = `
-
 <style>
 @keyframes shake {
   0% { transform: translateX(0); }
@@ -333,12 +352,9 @@ const bannerHTML = `
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=EB+Garamond">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
 
-<div id="travel-alert-modal" class="modal">
+<div id="${bannerId}" class="modal">
   <div class="modal-content">
-    <!-- <span class="close" onclick="const el = document.getElementById('travel-alert-modal'); el.style.opacity = 0; el.style.display = 'none';">&times;</span> -->
-    <!-- <span class="close" onclick="console.log('CLOSING...'); const el = document.getElementById('travel-alert-modal'); console.log('removing', el); el.remove(); console.log('after', document.getElementById('travel-alert-modal'));">&times;</span> -->
-    <!-- <span class="close" onclick="document.getElementById('travel-alert-modal').remove();">&times;</span> -->
-    <span class="close" id="travel-alert-close-button">&times;</span>
+    <span class="close" id="${closeButtonId}">&times;</span>
     <div class="modal-content-text">
       <h1>LGBTQ+ Travel Alert! ⚠️</h1>
       <h2><span class="red">This region is not safe for travel</span></h2>
