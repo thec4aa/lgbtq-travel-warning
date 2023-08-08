@@ -2,7 +2,15 @@
 //
 //
 
-const bannedWords = ["Uzbekistan", "Uganda", "Russia", "Florida"];
+const bannedWords = [
+  "Uzbekistan",
+  "Uganda",
+  "Russia",
+  "Florida",
+  "China",
+  "Qatar",
+  "Iran",
+];
 
 const bannerId = "travel-alert-modal";
 const closeButtonId = "travel-alert-modal-close";
@@ -37,21 +45,6 @@ const createBanner = () => {
   el.addEventListener("click", function () {
     removeBanner();
   });
-
-  // const banner = document.createElement("div");
-  // banner.id = bannerId;
-  // banner.style.position = "fixed";
-  // banner.style.width = "100%";
-  // banner.style.height = "50px";
-  // banner.style.backgroundColor = "red";
-  // banner.style.color = "white";
-  // banner.style.zIndex = "9999";
-  // banner.style.textAlign = "center";
-  // banner.style.paddingTop = "10px";
-  // banner.style.fontSize = "20px";
-  // banner.style.fontWeight = "bold";
-  // banner.innerHTML = "WARNING: This is a warning banner.";
-  // document.body.prepend(banner);
 };
 
 const removeBanner = () => {
@@ -62,13 +55,6 @@ const removeBanner = () => {
     bannerInjected = false;
   }
 };
-
-// const monitorInput = (input) => {
-//   input.addEventListener("change", function () {
-//     console.log("travel-warning: input value changed to: " + this.value);
-//     if (checkTextForWords(this.value)) createBanner();
-//   });
-// };
 
 const checkTextForWords = (searchText) => {
   const regex = new RegExp(bannedWords.join("|"), "i");
@@ -100,39 +86,41 @@ function handleFormChangeWithName(name, ev) {
 }
 
 function handleFormChange(ev) {
-  // brute force check every input
-  // if (checkInputsForWords()) createBanner();
-  // else console.log("handleFormChange: no banned words found");
-
-  // just check what changed
   console.log("travel-warning: handleFormChange", ev);
+  if (ev.inputType == "deleteContentBackward") {
+    console.log(
+      "travel-warning: you're intelligently pressing backspace, ignoring..."
+    );
+    return;
+  }
+
   if (ev.target) {
-    // console.log({
-    //   value: ev?.target?.value,
-    //   defaultValue: ev?.target?.defaultValue,
-    //   innerText: ev?.target?.innerText,
-    // });
     if (
       checkTextForWords(ev.target.value) ||
       checkTextForWords(ev.target.defaultValue) ||
       checkTextForWords(ev.target.innerText)
     ) {
-      console.log("TARGET HIT");
+      console.log("travel-warning: bOoP BoOp TARGET HIT", {
+        value: ev?.target?.value,
+        defaultValue: ev?.target?.defaultValue,
+        innerText: ev?.target?.innerText,
+      });
+
       createBanner();
     }
   }
   if (ev.relatedTarget) {
-    // console.log({
-    //   value: ev.relatedTarget.value,
-    //   defaultValue: ev.relatedTarget.defaultValue,
-    //   innerText: ev.relatedTarget.innerText,
-    // });
+    console.log();
     if (
       checkTextForWords(ev.relatedTarget.value) ||
       checkTextForWords(ev.relatedTarget.defaultValue) ||
       checkTextForWords(ev.relatedTarget.innerText)
     ) {
-      console.log("RELATEDTARGET HIT");
+      console.log("travel-warning: oh SHI RELATEDTARGET HIT", {
+        value: ev.relatedTarget.value,
+        defaultValue: ev.relatedTarget.defaultValue,
+        innerText: ev.relatedTarget.innerText,
+      });
       createBanner();
     }
   }
@@ -142,18 +130,22 @@ const monitorInputs = () => {
   const formElements = document.querySelectorAll("input, select, textarea");
   console.log("travel-warning: monitoring form inputs...", formElements);
   formElements.forEach(function (element) {
-    // avoid issues w/ accidentally double-binding same elements by first removing it
-    // element.removeEventListener("input", handleFormChange);
+    // avoid issues w/ accidentally double-binding same elements by tracking which ones we've bound to
     const attr = "data-travel-warning-bound";
     if (!element.hasAttribute(attr)) {
-      element.addEventListener("input", handleFormChange);
       element.setAttribute(attr, "true");
+      // bind to input & blur to catch user input
+      element.addEventListener("input", handleFormChange);
+      element.addEventListener("blur", handleFormChange);
+      // bind to change since apps often fill out the field if you click something
+      element.addEventListener("change", handleFormChange);
+
+      // element.addEventListener("input", (ev) => handleFormChangeWithName("input", ev));
+      // element.addEventListener("change", (ev) => handleFormChangeWithName("change", ev));
+      // element.addEventListener("blur", (ev) => handleFormChangeWithName("blur", ev));
     } else {
       console.log("travel-warning: not rebinding", element);
     }
-    // element.addEventListener("input", (ev) => handleFormChangeWithName("input", ev));
-    // element.addEventListener("change", (ev) => handleFormChangeWithName("change", ev));
-    // element.addEventListener("blur", (ev) => handleFormChangeWithName("blur", ev));
   });
 };
 
