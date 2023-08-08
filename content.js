@@ -18,7 +18,7 @@ const createBanner = () => {
   // const script = document.createElement("script");
   // script.textContent = `
   //   function hideModal() {
-  //     var modal = document.getElementById('myModal');
+  //     var modal = document.getElementById('travel-alert-modal');
   //     modal.style.display = 'none';
   //   }
   // `;
@@ -26,9 +26,17 @@ const createBanner = () => {
 
   // inject our banner HTML by brute force
   console.log("creating banner...");
+  bannerInjected = true;
   document.body.innerHTML = bannerHTML + document.body.innerHTML;
-  const modal = document.getElementById("myModal");
+  const modal = document.getElementById("travel-alert-modal");
   modal.style.opacity = "1"; // activate fade in animation
+
+  // make our close button work, even with restricted content-security policies
+  const el = document.getElementById("travel-alert-close-button");
+
+  el.addEventListener("click", function () {
+    modal.remove();
+  });
 
   // const banner = document.createElement("div");
   // banner.id = bannerId;
@@ -44,8 +52,6 @@ const createBanner = () => {
   // banner.style.fontWeight = "bold";
   // banner.innerHTML = "WARNING: This is a warning banner.";
   // document.body.prepend(banner);
-
-  bannerInjected = true;
 };
 
 const removeBanner = () => {
@@ -87,19 +93,19 @@ function checkInputsForWords() {
   return false;
 }
 
-function handleFormChange(ev) {
+function handleFormChange(name, ev) {
   // brute force check every input
   // if (checkInputsForWords()) createBanner();
   // else console.log("handleFormChange: no banned words found");
 
   // just check what changed
-  console.log("handleFormChange", ev);
+  console.log("travel-warning: handleFormChange", name, ev);
   if (ev.target) {
-    console.log({
-      value: ev?.target?.value,
-      defaultValue: ev?.target?.defaultValue,
-      innerText: ev?.target?.innerText,
-    });
+    // console.log({
+    //   value: ev?.target?.value,
+    //   defaultValue: ev?.target?.defaultValue,
+    //   innerText: ev?.target?.innerText,
+    // });
     if (
       checkTextForWords(ev.target.value) ||
       checkTextForWords(ev.target.defaultValue) ||
@@ -110,11 +116,11 @@ function handleFormChange(ev) {
     }
   }
   if (ev.relatedTarget) {
-    console.log({
-      value: ev.relatedTarget.value,
-      defaultValue: ev.relatedTarget.defaultValue,
-      innerText: ev.relatedTarget.innerText,
-    });
+    // console.log({
+    //   value: ev.relatedTarget.value,
+    //   defaultValue: ev.relatedTarget.defaultValue,
+    //   innerText: ev.relatedTarget.innerText,
+    // });
     if (
       checkTextForWords(ev.relatedTarget.value) ||
       checkTextForWords(ev.relatedTarget.defaultValue) ||
@@ -130,9 +136,9 @@ const monitorInputs = () => {
   const formElements = document.querySelectorAll("input, select, textarea");
   console.log("monitoring form inputs", formElements);
   formElements.forEach(function (element) {
-    element.addEventListener("input", handleFormChange);
-    element.addEventListener("change", handleFormChange);
-    element.addEventListener("blur", handleFormChange);
+    element.addEventListener("input", (ev) => handleFormChange("input", ev));
+    // element.addEventListener("change", (ev) => handleFormChange("change", ev));
+    // element.addEventListener("blur", (ev) => handleFormChange("blur", ev));
   });
 };
 
@@ -170,23 +176,6 @@ monitorInputs();
 //   createBanner();
 // }, 1000);
 
-// if (window.location.hostname === "www.google.com") {
-//   console.log("travel-warning: Google Flights");
-//   const selector = "div[aria-placeholder='Where to?'] input";
-//   const input = document.querySelector(selector);
-//   // TODO annoyingly need to monitor for a hidden div that is appended after the input
-//   // monitorInput(input);
-// } else if (window.location.hostname.match(/booking\.com/)) {
-//   console.log("travel-warning: Booking.com");
-//   const selector = "input[name='ss']";
-//   const input = document.querySelector(selector);
-//   // monitorInput(input);
-//   const check = checkBodyForWords();
-//   console.log({ check });
-// } else {
-//   console.log("travel-warning: unsupported site", window.location);
-// }
-
 const bannerHTML = `
 
 <style>
@@ -206,8 +195,10 @@ const bannerHTML = `
 
 /* The Modal (background) */
 .modal {
+  opacity: 0;
+  animation: shake 1s;
   position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
+  z-index: 10001; /* Sit on top; Kaya uses modals w/ z = 10000 wtf */
   left: 0;
   top: 0;
   width: 100%; /* Full width */
@@ -342,28 +333,29 @@ const bannerHTML = `
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=EB+Garamond">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
 
-<div id="myModal" class="modal">
-<!-- Modal content -->
-<div class="modal-content">
-  <span class="close">&times;</span>
-  <div class="modal-content-text">
-    <h1>LGBTQ+ Travel Alert! ⚠️</h1>
-    <h2><span class="red">This region is not safe for travel</span></h2>
+<div id="travel-alert-modal" class="modal">
+  <div class="modal-content">
+    <!-- <span class="close" onclick="const el = document.getElementById('travel-alert-modal'); el.style.opacity = 0; el.style.display = 'none';">&times;</span> -->
+    <!-- <span class="close" onclick="console.log('CLOSING...'); const el = document.getElementById('travel-alert-modal'); console.log('removing', el); el.remove(); console.log('after', document.getElementById('travel-alert-modal'));">&times;</span> -->
+    <!-- <span class="close" onclick="document.getElementById('travel-alert-modal').remove();">&times;</span> -->
+    <span class="close" id="travel-alert-close-button">&times;</span>
+    <div class="modal-content-text">
+      <h1>LGBTQ+ Travel Alert! ⚠️</h1>
+      <h2><span class="red">This region is not safe for travel</span></h2>
 
-    <p>Loving someone should not be a crime. Yet this region's discriminatory, anti-LGBTQ+ laws put travelers at risk. Do not travel here.
+      <p>Loving someone should not be a crime. Yet this region's discriminatory, anti-LGBTQ+ laws put travelers at risk. Do not travel here.
 
-    <p><strong>This region's laws allow for one or more of the following:</strong></p>
+      <p><strong>This region's laws allow for one or more of the following:</strong></p>
 
-    <ul>
-      <li>Criminalization of homosexuality</li>
-      <li>Torture of suspected LGBTQ people</li>
-      <li>Criminalization of education about sexuality</li>
-      <li>Criminalization of HIV status and/or testing</li>
-    </ul>
+      <ul>
+        <li>Criminalization of homosexuality</li>
+        <li>Torture of suspected LGBTQ people</li>
+        <li>Criminalization of education about sexuality</li>
+        <li>Criminalization of HIV status and/or testing</li>
+      </ul>
 
-    <p>Learn more at: <a href="https://BringLoveToUzbekistan.org">BringLoveToUzbekistan.org</a>
+      <p>Learn more at: <a href="https://BringLoveToUzbekistan.org">BringLoveToUzbekistan.org</a>
+    </div>
   </div>
-</div>
-
 </div>
 `;

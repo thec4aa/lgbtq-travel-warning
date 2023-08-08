@@ -6,7 +6,14 @@
   "content_scripts": [
     {
       "js": ["content.js"],
-      "matches": ["https://*.booking.com/*"]
+      "matches": [
+        "https://*.booking.com/*",
+        "https://*.kayak.com/*",
+        "https://*.kayak.fr/*",
+        "https://www.google.com/travel/*",
+        "https://www.airbnb.com/*",
+        "https://www.vrbo.com/"
+      ]
     }
   ]
 }
