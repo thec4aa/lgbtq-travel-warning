@@ -350,7 +350,7 @@ const bannerHTML = `
     <h1>LGBTQ+ Travel Alert! ⚠️</h1>
     <h2><span class="red">This region is not safe for travel</span></h2>
 
-    <p>Loving someone should not a crime. Yet this region's discriminatory, anti-LGBTQ+ laws put travelers at risk. Do not travel here.
+    <p>Loving someone should not be a crime. Yet this region's discriminatory, anti-LGBTQ+ laws put travelers at risk. Do not travel here.
 
     <p><strong>This region's laws allow for one or more of the following:</strong></p>
 
@@ -361,7 +361,7 @@ const bannerHTML = `
       <li>Criminalization of HIV status and/or testing</li>
     </ul>
 
-    <p>Learn more at: <a href=https://BringLoveToUzbekistan.org>BringLoveToUzbekistan.org</a>
+    <p>Learn more at: <a href="https://BringLoveToUzbekistan.org">BringLoveToUzbekistan.org</a>
   </div>
 </div>
 
