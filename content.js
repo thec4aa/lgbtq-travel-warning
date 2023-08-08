@@ -15,14 +15,14 @@ const createBanner = () => {
 
   // create hideModal() function in-page
   // FIXME this doesn't work on booking.com due to their content security policy
-  const script = document.createElement("script");
-  script.textContent = `
-    function hideModal() {
-      var modal = document.getElementById('myModal');
-      modal.style.display = 'none';
-    }
-  `;
-  document.body.appendChild(script);
+  // const script = document.createElement("script");
+  // script.textContent = `
+  //   function hideModal() {
+  //     var modal = document.getElementById('myModal');
+  //     modal.style.display = 'none';
+  //   }
+  // `;
+  // document.body.appendChild(script);
 
   // inject our banner HTML by brute force
   console.log("creating banner...");
@@ -87,10 +87,43 @@ function checkInputsForWords() {
   return false;
 }
 
-function handleFormChange(type, other) {
-  console.log("handleFormChange", type, other);
-  if (checkInputsForWords()) createBanner();
-  else console.log("handleFormChange: no banned words found");
+function handleFormChange(ev) {
+  // brute force check every input
+  // if (checkInputsForWords()) createBanner();
+  // else console.log("handleFormChange: no banned words found");
+
+  // just check what changed
+  console.log("handleFormChange", ev);
+  if (ev.target) {
+    console.log({
+      value: ev?.target?.value,
+      defaultValue: ev?.target?.defaultValue,
+      innerText: ev?.target?.innerText,
+    });
+    if (
+      checkTextForWords(ev.target.value) ||
+      checkTextForWords(ev.target.defaultValue) ||
+      checkTextForWords(ev.target.innerText)
+    ) {
+      console.log("TARGET HIT");
+      createBanner();
+    }
+  }
+  if (ev.relatedTarget) {
+    console.log({
+      value: ev.relatedTarget.value,
+      defaultValue: ev.relatedTarget.defaultValue,
+      innerText: ev.relatedTarget.innerText,
+    });
+    if (
+      checkTextForWords(ev.relatedTarget.value) ||
+      checkTextForWords(ev.relatedTarget.defaultValue) ||
+      checkTextForWords(ev.relatedTarget.innerText)
+    ) {
+      console.log("RELATEDTARGET HIT");
+      createBanner();
+    }
+  }
 }
 
 const monitorInputs = () => {
@@ -171,65 +204,67 @@ const bannerHTML = `
   100% { transform: translateX(0); }
 }
 
-body {
-  background-color: #fff;
-  width: 1280px;
-  margin: auto;
-  font-size: 1em;
-}
-
-#lipsum {
- font-size: 3em;
-}
-
 /* The Modal (background) */
 .modal {
-  opacity: 0;
-  animation: shake 1s;
-
   position: fixed; /* Stay in place */
-  z-index: 100; /* Sit on top */
+  z-index: 1; /* Sit on top */
   left: 0;
   top: 0;
   width: 100%; /* Full width */
   height: 100%; /* Full height */
   overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
   backdrop-filter: blur(3px);
 }
 
 /* Modal Content/Box */
 .modal-content {
-  background-color: #0a314d;
-  color: white;
+  background-color: #fff;
+  color: #0a314d;
   font-size: 22px;
-  margin: 15% auto; /* 15% from the top and centered */
+  margin: 10% auto; /* 15% from the top and centered */
   padding: 30px;
-  border: 2px solid #ccc;
   width: 80%; /* Could be more or less, depending on screen size */
 }
 
 .modal-content-text {
-  margin-left: 10%;
-  border-left: 1px solid #fff;
+  margin: 5% 10% 5% 10%;
   padding-left: 5%;
   font-family: "Open Sans", Arial, Sans-Serif;
   font-size: 16px;
   line-height: 28px;
-  letter-spacing: .05em;
+  letter-spacing: 0.05em;
+  border-left: 10px solid;
+  border-image-slice: 1;
+  border-image-source: linear-gradient(
+    180deg,
+    red,
+    orange,
+    yellow,
+    green,
+    blue,
+    purple
+  );
 }
 
-.modal-content h1{
+.modal-content h1 {
   font-family: "EB Garamond", Times, Serif;
   font-weight: 400;
   padding: 0px;
-  margin-top:.25em;
+  margin-top: 0.25em;
   font-size: 2.5em;
   line-height: 1em;
+  animation: blinker 0.5s linear 3;
 }
 
-.modal-content h2{
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
+
+.modal-content h2 {
   font-size: 14px;
   margin-bottom: 10px;
   font-weight: 700;
@@ -238,23 +273,21 @@ body {
   text-transform: uppercase;
 }
 
-.modal-content .stars{
+.modal-content .stars {
   margin: 0;
 }
 
-.modal-content-text a
-{
-  color: white;
+.modal-content-text a {
+  color: #0a314d;
   font-weight: bold;
   text-decoration: none;
   background: linear-gradient(90deg, red, orange, yellow, green, blue, purple);
   background-clip: text;
   -webkit-background-clip: text;
-  letter-spacing: .1em;
+  letter-spacing: 0.1em;
 }
 
-.modal-content-text a:hover
-  {
+.modal-content-text a:hover {
   color: transparent;
   transition: 500ms ease;
 }
@@ -302,7 +335,7 @@ body {
 }
 
 .babyblue {
-  color: #A1C9F2;
+  color: #a1c9f2;
 }
 </style>
 
@@ -310,28 +343,27 @@ body {
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
 
 <div id="myModal" class="modal">
-  <!-- Modal content -->
-  <div class="modal-content">
-    <span class="close" onclick="hideModal()">&times;</span>
-    <div class="modal-content-text">
-    <p class="stars"><span class="red">★</span> <span class="orange">★</span> <span class="yellow">★</span> <span class="green">★</span> <span class="blue">★</span> <span class="indigo">★</span> <span class="violet">★</span> <span class="babyblue">★</span></p>
-    <h1>LGBTQ Travel Alert! ⚠️</h1>
-    <h2>This region is not safe for travel</h2>
+<!-- Modal content -->
+<div class="modal-content">
+  <span class="close">&times;</span>
+  <div class="modal-content-text">
+    <h1>LGBTQ+ Travel Alert! ⚠️</h1>
+    <h2><span class="red">This region is not safe for travel</span></h2>
 
-<p>Loving someone should not a crime. This region has discriminatory laws which put travelers at risk. Do not travel here.
+    <p>Loving someone should not a crime. Yet this region's discriminatory, anti-LGBTQ+ laws put travelers at risk. Do not travel here.
 
-<p><strong>This region's laws allow for one or more of the following:</strong></p>
+    <p><strong>This region's laws allow for one or more of the following:</strong></p>
 
-<ul>
-<li>Criminalization of homosexuality</li>
-<li>Torture of suspected LGBTQ people</li>
-<li>Criminalization of education about sexuality</li>
-<li>Criminalization of HIV status and/or testing</li>
-</ul>
+    <ul>
+      <li>Criminalization of homosexuality</li>
+      <li>Torture of suspected LGBTQ people</li>
+      <li>Criminalization of education about sexuality</li>
+      <li>Criminalization of HIV status and/or testing</li>
+    </ul>
 
-      <p>Learn more at: <a href=https://BringLoveToUzbekistan.org>BringLoveToUzbekistan.org</a>
-    </div>
+    <p>Learn more at: <a href=https://BringLoveToUzbekistan.org>BringLoveToUzbekistan.org</a>
   </div>
+</div>
 
 </div>
- `;
+`;
