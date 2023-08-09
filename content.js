@@ -7,7 +7,7 @@ const bannedWords = [
   "Uzbekistan",
     "Uzbek",
     "Tashkent",
-    "Sammarkand",
+    "Samarkand",
     "Samarqand",
   "Russia",
     "Moscow",
