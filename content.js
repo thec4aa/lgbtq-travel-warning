@@ -6,10 +6,10 @@ const bannedWords = [
   "Uzbekistan",
   "Uganda",
   "Russia",
-  "Florida",
   "China",
   "Qatar",
   "Iran",
+  "Florida",
 ];
 
 const bannerId = "travel-alert-modal";
@@ -275,10 +275,6 @@ const bannerHTML = `
   text-transform: uppercase;
 }
 
-.modal-content .stars {
-  margin: 0;
-}
-
 .modal-content-text a {
   color: #0a314d;
   font-weight: bold;
@@ -293,6 +289,10 @@ const bannerHTML = `
   color: transparent;
   transition: 500ms ease;
 }
+.modal-content-text .readmore {
+  text-align: center;
+}
+
 /* The Close Button */
 .close {
   color: #aaa;
@@ -308,37 +308,6 @@ const bannerHTML = `
   cursor: pointer;
 }
 
-.red {
-  color: red;
-}
-
-.orange {
-  color: orange;
-}
-
-.yellow {
-  color: yellow;
-}
-
-.green {
-  color: green;
-}
-
-.blue {
-  color: blue;
-}
-
-.indigo {
-  color: purple;
-}
-
-.violet {
-  color: pink;
-}
-
-.babyblue {
-  color: #a1c9f2;
-}
 </style>
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=EB+Garamond">
@@ -348,21 +317,21 @@ const bannerHTML = `
   <div class="modal-content">
     <span class="close" id="${closeButtonId}">&times;</span>
     <div class="modal-content-text">
-      <h1>LGBTQ+ Travel Alert! ⚠️</h1>
-      <h2><span class="red">This region is not safe for travel</span></h2>
+<h2><span class="red">❌ region not safe for travel ❌</span></h2>
 
-      <p>Loving someone should not be a crime. Yet this region's discriminatory, anti-LGBTQ+ laws put travelers at risk. Do not travel here.
+        <p>Loving someone should never be a crime, yet discriminatory, anti-LGBTQ+ laws and practices in this region both endanger lives and put travelers at risk.
+        <p><strong>This region's laws allow for one or more of the following:</strong></p>
 
-      <p><strong>This region's laws allow for one or more of the following:</strong></p>
+        <ul>
+          <li>Criminalization of homosexuality</li>
+          <li>Torture of suspected LGBTQ+ individuals</li>
+          <li>Criminalization of education about sexuality</li>
+          <li>Criminalization of HIV status and/or testing</li>
+          <li>Infringements on the rights of LGBTQ+ individuals</li>
+        </ul>
 
-      <ul>
-        <li>Criminalization of homosexuality</li>
-        <li>Torture of suspected LGBTQ people</li>
-        <li>Criminalization of education about sexuality</li>
-        <li>Criminalization of HIV status and/or testing</li>
-      </ul>
-
-      <p>Learn more at: <a href="https://BringLoveToUzbekistan.org">BringLoveToUzbekistan.org</a>
+        <p>Do not travel to, or spend money in, this region. Instead, choose somewhere fabulous.</p>
+        <p class="readmore">Learn more at: <a href=https://LGBTQTravelAlert.org>LGBTQTravelAlert.org</a></p>
     </div>
   </div>
 </div>
