@@ -12,7 +12,8 @@
         "https://*.kayak.fr/*",
         "https://www.google.com/travel/*",
         "https://*.airbnb.com/*",
-        "https://*.vrbo.com/"
+        "https://*.vrbo.com/",
+        "https://*.priceline.com/*"
       ]
     }
   ]
