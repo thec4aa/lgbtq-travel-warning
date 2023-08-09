@@ -368,7 +368,8 @@ const bannerHTML = `
   <div class="modal-content">
     <span class="close" id="${closeButtonId}">&times;</span>
     <div class="modal-content-text">
-<h2><span class="red">❌ region not safe for travel ❌</span></h2>
+    <h1>LGBTQ+ Travel Alert! ⚠️</h1>
+    <h2><span class="red">❌ region not safe for travel ❌</span></h2>
 
         <p>Loving someone should never be a crime, yet discriminatory, anti-LGBTQ+ laws and practices in this region both endanger lives and put travelers at risk.
         <p><strong>This region's laws allow for one or more of the following:</strong></p>
