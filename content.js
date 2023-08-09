@@ -257,7 +257,6 @@ const bannerHTML = `
 /* The Modal (background) */
 .modal {
   opacity: 0;
-  animation: shake 1s;
   position: fixed; /* Stay in place */
   z-index: 10001; /* Sit on top; Kaya uses modals w/ z = 10000 wtf */
   left: 0;
@@ -272,6 +271,7 @@ const bannerHTML = `
 
 /* Modal Content/Box */
 .modal-content {
+  animation: shake 1s;
   background-color: #fff;
   color: #0a314d;
   font-size: 22px;
@@ -307,6 +307,7 @@ const bannerHTML = `
   margin-top: 0.25em;
   font-size: 2.5em;
   line-height: 1em;
+  animation-delay: 1s
   animation: blinker 0.5s linear 3;
 }
 
