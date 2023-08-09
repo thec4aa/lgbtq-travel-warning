@@ -2,7 +2,7 @@
 
 Alerts you when booking travel to locations with dangerously backwards LGBTQ+ laws like Uzbekistan, Uganda, Russia, and Florida.
 
-<img width="1069" alt="CleanShot 2023-08-09 at 01 02 17@2x" src="https://github.com/thec4aa/lgbtq-travel-warning/assets/1903/e36d3f78-7e63-419c-8596-06fc73e01a75">
+<img width="1395" alt="Screenshot 2023-08-08 at 11 01 12 PM" src="https://github.com/thec4aa/lgbtq-travel-warning/assets/67271/7f0abd7a-1c34-40d8-97e6-84c687188432">
 
 
 ## Development
