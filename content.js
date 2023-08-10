@@ -1,7 +1,14 @@
-//
-//
-//
+/*
+ *  -------------------------------------------------------------------
+ * |   LGBTQ Travel Warning browser extension                          |
+ * |   brought to you by the C4AA: https://c4aa.org                    |
+ * |   open-source: https://github.com/thec4aa/lgbtq-travel-warning/   |
+ * |   pull requests welcome                                           |
+ * |   thank you for your support <3                                   |
+ *  -------------------------------------------------------------------
+ */
 
+// prettier-ignore
 const bannedWords = [
 // Asia / Азия
   "Uzbekistan", "Узбекистан",
