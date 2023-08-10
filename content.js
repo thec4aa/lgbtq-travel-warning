@@ -74,13 +74,20 @@ const bannerId = "travel-alert-modal";
 const closeButtonId = "travel-alert-modal-close";
 let bannerInjected = false;
 
+// only log things in development
+const devMode = true;
+const log = (...args) => {
+  if (!devMode) return;
+  console.log("LGBTQTravelAlert:", ...args);
+};
+
 const createBanner = () => {
   if (bannerInjected) {
-    console.log("travel-error: banner already injected");
+    log("banner already injected");
     return;
   }
 
-  console.log("creating banner...");
+  log("creating banner...");
   bannerInjected = true;
 
   // slap in the HTML and force the browser to just figure it out
@@ -107,7 +114,7 @@ const createBanner = () => {
 
 const removeBanner = () => {
   const banner = document.getElementById(bannerId);
-  console.log("REMOVING BANNER", banner);
+  log("REMOVING BANNER", banner);
   if (banner) {
     banner.remove();
     bannerInjected = false;
@@ -128,7 +135,7 @@ function checkInputsForWords() {
   const inputs = document.querySelectorAll("input, textarea, select");
   for (let i = 0; i < inputs.length; i++) {
     if (checkTextForWords(inputs[i].value)) {
-      console.log("checkInputsForWords: Found banned words in input =>", {
+      log("checkInputsForWords: Found banned words in input =>", {
         input: inputs[i],
         value: inputs[i].value,
       });
@@ -138,17 +145,10 @@ function checkInputsForWords() {
   return false;
 }
 
-function handleFormChangeWithName(name, ev) {
-  console.log("travel-warning: handleFormChangeWithName", name);
-  handleFormChange(ev);
-}
-
 function handleFormChange(ev) {
-  console.log("travel-warning: handleFormChange", ev);
+  log("handleFormChange", ev);
   if (ev.inputType == "deleteContentBackward") {
-    console.log(
-      "travel-warning: you're intelligently pressing backspace, ignoring..."
-    );
+    log("you're intelligently pressing backspace, ignoring...");
     return;
   }
 
@@ -158,7 +158,7 @@ function handleFormChange(ev) {
       checkTextForWords(ev.target.defaultValue) ||
       checkTextForWords(ev.target.innerText)
     ) {
-      console.log("travel-warning: bOoP BoOp TARGET HIT", {
+      log("bOoP BoOp TARGET HIT", {
         value: ev?.target?.value,
         defaultValue: ev?.target?.defaultValue,
         innerText: ev?.target?.innerText,
@@ -168,13 +168,13 @@ function handleFormChange(ev) {
     }
   }
   if (ev.relatedTarget) {
-    console.log();
+    log();
     if (
       checkTextForWords(ev.relatedTarget.value) ||
       checkTextForWords(ev.relatedTarget.defaultValue) ||
       checkTextForWords(ev.relatedTarget.innerText)
     ) {
-      console.log("travel-warning: oh SHI RELATEDTARGET HIT", {
+      log("oh SHI RELATEDTARGET HIT", {
         value: ev.relatedTarget.value,
         defaultValue: ev.relatedTarget.defaultValue,
         innerText: ev.relatedTarget.innerText,
@@ -186,7 +186,7 @@ function handleFormChange(ev) {
 
 const monitorInputs = () => {
   const formElements = document.querySelectorAll("input, select, textarea");
-  console.log("travel-warning: monitoring form inputs...", formElements);
+  log("monitoring form inputs...", formElements);
   formElements.forEach(function (element) {
     // avoid issues w/ accidentally double-binding same elements by tracking which ones we've bound to
     const attr = "data-travel-warning-bound";
@@ -197,12 +197,8 @@ const monitorInputs = () => {
       element.addEventListener("blur", handleFormChange);
       // bind to change since apps often fill out the field if you click something
       element.addEventListener("change", handleFormChange);
-
-      // element.addEventListener("input", (ev) => handleFormChangeWithName("input", ev));
-      // element.addEventListener("change", (ev) => handleFormChangeWithName("change", ev));
-      // element.addEventListener("blur", (ev) => handleFormChangeWithName("blur", ev));
     } else {
-      console.log("travel-warning: not rebinding", element);
+      log("not rebinding", element);
     }
   });
 };
@@ -218,8 +214,8 @@ const monitorBody = () => {
             if (found) {
               createBanner();
             } else {
-              console.log(
-                "Did not find banned words in the updated HTML.",
+              log(
+                "could not find banned words in the updated HTML.",
                 node.innerText
               );
             }
@@ -232,11 +228,11 @@ const monitorBody = () => {
   observer.observe(document, { childList: true, subtree: true });
 };
 
-console.log("travel-warning: content.js loaded", window.location.hostname);
+log("content.js loaded", window.location.hostname);
 
 // wait til page has sufficiently loaded to setup our event listeners
 window.addEventListener("load", function () {
-  console.log("travel-warning: load event fired, monitoring inputs...");
+  log("load event fired, monitoring inputs...");
   monitorInputs();
   // monitorBody();
 });
