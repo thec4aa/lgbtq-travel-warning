@@ -16,7 +16,7 @@ const bannedWords = [
     "Tashkent", "Ташкент",
     "Samarkand", "Самарканд",
     "Samarqand", "Самарканд",
-  "Russia", "Россия", 
+  "Russia", "Россия",
   "Russian Federation", "Российская Федерация",
     "Moscow", "Москва",
     "Saint Petersburg", "Санкт-Петербург",
@@ -74,8 +74,9 @@ const bannerId = "travel-alert-modal";
 const closeButtonId = "travel-alert-modal-close";
 let bannerInjected = false;
 
-// only log things in development
-const devMode = true;
+// only print logging in development
+// do not modify this line without also adjusting `build.sh`
+const devMode = false;
 const log = (...args) => {
   if (!devMode) return;
   console.log("LGBTQTravelAlert:", ...args);
