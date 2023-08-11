@@ -1,8 +1,8 @@
 /*
  *  -------------------------------------------------------------------
- * |   LGBTQ Travel Warning browser extension                          |
+ * |   LGBTQ Travel Alert browser extension                          |
  * |   brought to you by the C4AA: https://c4aa.org                    |
- * |   open-source: https://github.com/thec4aa/lgbtq-travel-warning/   |
+ * |   open-source: https://github.com/thec4aa/lgbtq-travel-alert/   |
  * |   pull requests welcome                                           |
  * |   thank you for your support <3                                   |
  *  -------------------------------------------------------------------
@@ -190,7 +190,7 @@ const monitorInputs = () => {
   log("monitoring form inputs...", formElements);
   formElements.forEach(function (element) {
     // avoid issues w/ accidentally double-binding same elements by tracking which ones we've bound to
-    const attr = "data-travel-warning-bound";
+    const attr = "data-travel-alert-bound";
     if (!element.hasAttribute(attr)) {
       element.setAttribute(attr, "true");
       // bind to input & blur to catch user input
