@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "LGBTQ Travel Warning",
-  "version": "1.0.1",
+  "name": "LGBTQ Travel Alert",
+  "version": "1.0.2",
   "description": "Alerts you when booking travel to locations with dangerously backwards LGBTQ+ laws like Uzbekistan, Uganda, Russia, and Florida",
   "icons": {
     "16": "icon16.png",

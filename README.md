@@ -1,9 +1,19 @@
-# Travel Warning browser extension
+# LGBTQ Travel Alert browser extension
 
-Alerts you when booking travel to locations with dangerously backwards LGBTQ+ laws like Uzbekistan, Uganda, Russia, and Florida.
+Warns you if you try to book travel to locations with dangerously backwards LGBTQ+ laws like Uzbekistan, Uganda, Russia, and Florida.
 
-<img width="1395" alt="Screenshot 2023-08-08 at 11 01 12 PM" src="https://github.com/thec4aa/lgbtq-travel-warning/assets/67271/7f0abd7a-1c34-40d8-97e6-84c687188432">
+<img width="1395" alt="Screenshot 2023-08-08 at 11 01 12 PM" src="https://github.com/thec4aa/lgbtq-travel-alert/assets/67271/7f0abd7a-1c34-40d8-97e6-84c687188432">
 
+Works on websites like:
+
+- <https://booking.com>
+- <https://kayak.com>
+- <https://google.com/travel>
+- <https://airbnb.com>
+- <https://vrbo.com>
+- <https://priceline.com>
+
+Currently supports country/city names in English and Russian
 
 ## Development
 
@@ -13,7 +23,7 @@ Developed against Brave but should work fine in Chrome and maybe even Edge or Ar
 
 **To install, checkout this code and load the unpacked extension** in `brave://extensions` or `chrome://extensions`
 
-<img width="557" alt="CleanShot 2023-08-09 at 01 04 52@2x" src="https://github.com/thec4aa/lgbtq-travel-warning/assets/1903/a0d4115e-894e-4c74-9f48-03b641770ff0">
+<img width="557" alt="CleanShot 2023-08-09 at 01 04 52@2x" src="https://github.com/thec4aa/lgbtq-travel-alert/assets/1903/a0d4115e-894e-4c74-9f48-03b641770ff0">
 
 **To automatically reload the extension when you make code changes (on a Mac):**
 

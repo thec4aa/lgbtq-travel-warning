@@ -13,7 +13,7 @@ sed -i '' 's/^const devMode = true;$/const devMode = false;/' "$dir/content.js"
 cd "$dir/.."
 zip -q -r "$dirname.zip" "$dirname/"
 
-outfile="$(pwd)/lgbtq-travel-warning.zip"
+outfile="$(pwd)/lgbtq-travel-alert.zip"
 echo "Package built: $outfile"
 
 open -R "$outfile"
