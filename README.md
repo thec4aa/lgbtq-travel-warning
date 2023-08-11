@@ -1,6 +1,10 @@
 # Travel Warning browser extension
 
-Alerts you when booking travel to locations with dangerously backwards LGBTQ+ laws like Uzbekistan, Uganda, Russia, and Florida.
+Alerts you when booking travel to locations with dangerously descriminatory LGBTQ+ laws like Uzbekistan, Uganda, Russia, and Florida.
+
+You can then decide not to travel to, or spend money in, these regions. Instead: choose something fabulous.
+
+[LGBTQTravelAlert.org](https://lgbtqtravelalert.org/)
 
 <img width="1395" alt="Screenshot 2023-08-08 at 11 01 12 PM" src="https://github.com/thec4aa/lgbtq-travel-warning/assets/67271/7f0abd7a-1c34-40d8-97e6-84c687188432">
 
