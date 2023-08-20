@@ -11,7 +11,7 @@
 // prettier-ignore
 const bannedWords = [
 // Asia / Азия
-  "Uzbekistan", "Узбекистан",
+  "Uzbekistan", "Узбекистан", "أوزبكستان"
     "Uzbek", "узбекский",
     "Tashkent", "Ташкент",
     "Samarkand", "Самарканд",
